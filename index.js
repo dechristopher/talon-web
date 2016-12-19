@@ -5,6 +5,8 @@ const app = express();
 const cron = require('cron');
 const rq = require('requestify');
 
+var config = JSON.parse(fs.readFileSync('./config.json'));
+
 var options = {
   key: fs.readFileSync('./private.key'),
   cert: fs.readFileSync('./ssl.crt')
@@ -34,8 +36,8 @@ io.on('connection', function(socket) {
   sendServerStatus.start();
 });
 
-server.listen(1337, function() {
-  console.log('~ Server running on %s port', serverPort);
+server.listen(config.port, function() {
+  console.log('~ Server running on %s port', config.port);
 });
 
 var parseServers = cron.job("*/10 * * * * *", function() {
