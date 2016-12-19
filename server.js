@@ -22,8 +22,10 @@ var parseServers = cron.job("*/10 * * * * *", function() {
 });
 
 endpoint.on('connection', function (socket) {
+	console.log('connection');
 	var sendServerStatus = cron.job("*/15 * * * * *", function() {
-		endpoint.emit('serverStatus', servers);
+		socket.emit('serverStatus', JSON.stringify(servers));
+		console.log('emiting server status');
 	});
 	sendServerStatus.start();
 
@@ -45,10 +47,10 @@ function setServers(apiResponse) {
 		servers[i].players = thisSrv[1];
 	}
 
-	servers[8].online = 1;
-	servers[8].players = totalPlayers;
+	servers[7].online = 1;
+	servers[7].players = totalPlayers;
 
-	//console.log(servers);
+	console.log(servers);
 }
 
 parseServers.start();

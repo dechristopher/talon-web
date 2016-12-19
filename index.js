@@ -6,8 +6,8 @@ const cron = require('cron');
 const rq = require('requestify');
 
 var options = {
-  key: fs.readFileSync('./file.pem', 'utf-8'),
-  cert: fs.readFileSync('./file.crt', 'utf-8')
+  key: fs.readFileSync('./private.key'),
+  cert: fs.readFileSync('./ssl.crt')
 };
 
 const server = https.createServer(options, app);
@@ -26,10 +26,10 @@ var servers = [
 
 io.on('connection', function(socket) {
   console.log('connection');
-  socket.emit('message', '\"Retakes suck\" -drop');
+  //socket.emit('message', '\"Retakes suck\" -drop');
 
   var sendServerStatus = cron.job("*/15 * * * * *", function() {
-	  socket.emit('serverStatus', servers);
+	  socket.emit('serverStatus', JSON.stringify(servers));
   });
   sendServerStatus.start();
 });
@@ -55,8 +55,8 @@ function setServers(apiResponse) {
 		servers[i].players = thisSrv[1];
 	}
 
-	servers[8].online = 1;
-	servers[8].players = totalPlayers;
+	servers[7].online = 1;
+	servers[7].players = totalPlayers;
 
 	//console.log(servers);
 }
