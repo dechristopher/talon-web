@@ -27,9 +27,12 @@ var servers = [
 ];
 
 io.on('connection', function(socket) {
-  console.log('connection');
-  //socket.emit('message', '\"Retakes suck\" -drop');
+  console.log('~ Connection, sending data...');
+  //Send initial server data
+  socket.emit('serverStatus', JSON.stringify(servers));
+  socket.emit('message', '\"Retakes suck\" -drop');
 
+  //Send server data every 15 seconds
   var sendServerStatus = cron.job("*/15 * * * * *", function() {
 	  socket.emit('serverStatus', JSON.stringify(servers));
   });
@@ -37,7 +40,7 @@ io.on('connection', function(socket) {
 });
 
 server.listen(config.port, function() {
-  console.log('~ Server running on %s port', config.port);
+  console.log('~ Server running on port %s', config.port);
 });
 
 var parseServers = cron.job("*/10 * * * * *", function() {
