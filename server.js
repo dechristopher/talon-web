@@ -1,23 +1,54 @@
 const io = require('socket.io').listen(1337);
 const cron = require('cron');
+const rq = require('requestify');
 
-var endpoint = io.of('/' + id);
+var endpoint = io.of('/servers');
 
-var servers = {};
+var servers = [
+	{online:0, players:0},
+	{online:0, players:0},
+	{online:0, players:0},
+	{online:0, players:0},
+	{online:0, players:0},
+	{online:0, players:0},
+	{online:0, players:0},
+	{online:0, players:0}
+];
 
-var parseServers = cron.job("*/15 * * * * *", function() {
+console.log('~ Starting talon-web server watcher');
 
+var parseServers = cron.job("*/10 * * * * *", function() {
+	rq.get('http://kiir.us/api.php/?cmd=serverStatus&key=2F6E713BD4BA889A21166251DEDE9').then(response => setServers(response.getBody()));
 });
 
 endpoint.on('connection', function (socket) {
 	var sendServerStatus = cron.job("*/15 * * * * *", function() {
-		room.emit('serverStatus', );
+		endpoint.emit('serverStatus', servers);
 	});
+	sendServerStatus.start();
 
-	socket.on('data', function (data) {
+	//socket.on('data', function (data) {
 		//room.emit('data', data);
-	});
+	//});
 });
 
+function setServers(apiResponse) {
+	var splitSrvTotal = apiResponse.toString().split("_");
+	var allServers = splitSrvTotal[0];
+	var totalPlayers = splitSrvTotal[1];
+
+	var srvArray = allServers.toString().split("~");
+
+	for(var i = 0; i < 7; i++){
+		var thisSrv = srvArray[i].toString().split("-");
+		servers[i].online = thisSrv[0];
+		servers[i].players = thisSrv[1];
+	}
+
+	servers[8].online = 1;
+	servers[8].players = totalPlayers;
+
+	//console.log(servers);
+}
+
 parseServers.start();
-sendServerStatus.start();
