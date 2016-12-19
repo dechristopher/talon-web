@@ -6,8 +6,8 @@ const cron = require('cron');
 const rq = require('requestify');
 
 var options = {
-  key: fs.readFileSync('./file.pem'),
-  cert: fs.readFileSync('./file.crt')
+  key: fs.readFileSync('./file.pem', 'utf-8'),
+  cert: fs.readFileSync('./file.crt', 'utf-8')
 };
 
 const server = https.createServer(options, app);
