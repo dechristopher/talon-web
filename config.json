@@ -1,4 +1,5 @@
 {
+	"port": 1337,
 	"numServers": 7,
 	"slots": 70,
 	"servers": [
