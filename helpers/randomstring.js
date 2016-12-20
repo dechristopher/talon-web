@@ -1,4 +1,4 @@
-module.exports = function (length) {
+module.exports = function(length) {
     var text = '';
     var possible = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890';
 
