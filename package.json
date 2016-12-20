@@ -1,13 +1,13 @@
 {
   "name": "talon-web",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "The WSS handler for the server status checks on http://kiir.us",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node index.js"
   },
-  "author": "",
+  "author": "Andrew DeChristopher <drew@kiir.us>",
   "license": "ISC",
   "dependencies": {
     "cron": "^1.2.0",
