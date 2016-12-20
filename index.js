@@ -4,6 +4,7 @@ const https = require('https');
 const express = require('express');
 const app = express();
 const cron = require('cron');
+const g = require('gulp-util');
 const rq = require('requestify');
 
 //Load config file
@@ -30,11 +31,13 @@ var servers = [
 	{online:0, players:0}
 ];
 
+console.log('~ [' + g.colors.green('KIWI') + '] WSS server starting...')
+
 io.on('connection', function(socket) {
   //Set random connection id for this connection
   var id = require('./helpers/randomstring')(4);
 
-  console.log('~    Connect -> ID: [' + id + ']');
+  console.log('~    Connect -> ID: [' + g.colors.cyan('id') + ']');
 
   //Send connection id to client
   socket.emit('message', id);
@@ -51,13 +54,13 @@ io.on('connection', function(socket) {
   //Stop sending server data to disconnected clients
   socket.on('disconnect', function(){
 	  sendServerStatus.stop();
-	  console.log('~ Disconnect -> ID: [' + id + ']');
+	  console.log('~ Disconnect -> ID: [' + g.colors.cyan('id') + ']');
   });
 });
 
 //Start WSS listener
 server.listen(config.port, function() {
-  console.log('~ Server running on port %s', config.port);
+  console.log('~ Server listening on port ' + g.colors.magenta('%s'), config.port);
 });
 
 //Call the KIWI API for server status
