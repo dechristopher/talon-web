@@ -34,7 +34,7 @@ io.on('connection', function(socket) {
   //Set random connection id for this connection
   var id = require('./helpers/randomstring')(4);
 
-  console.log('~ Connection -> ID: [' + id + ']');
+  console.log('~    Connect -> ID: [' + id + ']');
 
   //Send connection id to client
   socket.emit('message', id);
@@ -45,14 +45,13 @@ io.on('connection', function(socket) {
   //Send server data every 15 seconds
   var sendServerStatus = cron.job("*/15 * * * * *", function() {
 	  socket.emit('serverStatus', JSON.stringify(servers));
-	  //console.log('sending')
   });
   sendServerStatus.start();
 
   //Stop sending server data to disconnected clients
   socket.on('disconnect', function(){
 	  sendServerStatus.stop();
-	  //console.log('disconnected, stopping')
+	  console.log('~ Disconnect -> ID: [' + id + ']');
   });
 });
 
