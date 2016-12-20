@@ -37,7 +37,7 @@ io.on('connection', function(socket) {
   console.log('~ Connection -> ID: [' + id + ']');
 
   //Send connection id to client
-  socket.emit('message', 'connection-id: ' + id);
+  socket.emit('message', id);
 
   //Send initial server data
   socket.emit('serverStatus', JSON.stringify(servers));
