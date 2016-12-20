@@ -27,22 +27,28 @@ var servers = [
 ];
 
 io.on('connection', function(socket) {
-  console.log('~ Connection, sending data...');
+  //Set random connection id for this connection
+  var id = require('./helpers/randomstring')(4);
+
+  console.log('~ Connection -> ID: [' + id + ']');
+
+  //Send connection id to client
+  socket.emit('message', 'connection-id: ' + id);
+
   //Send initial server data
   socket.emit('serverStatus', JSON.stringify(servers));
-  socket.emit('message', '\"Retakes suck\" -drop');
 
   //Send server data every 15 seconds
   var sendServerStatus = cron.job("*/15 * * * * *", function() {
 	  socket.emit('serverStatus', JSON.stringify(servers));
-	  console.log('sending')
+	  //console.log('sending')
   });
   sendServerStatus.start();
 
   //Stop sending server data to disconnected clients
   socket.on('disconnect', function(){
 	  sendServerStatus.stop();
-	  console.log('disconnected, stopping')
+	  //console.log('disconnected, stopping')
   });
 });
 
