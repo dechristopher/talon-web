@@ -37,7 +37,7 @@ io.on('connection', function(socket) {
   //Set random connection id for this connection
   var id = require('./helpers/randomstring')(4);
 
-  console.log('~    Connect -> ID: [' + g.colors.cyan('id') + ']');
+  console.log('~    Connect -> ID: [' + g.colors.cyan(id) + ']');
 
   //Send connection id to client
   socket.emit('message', id);
