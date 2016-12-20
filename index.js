@@ -54,7 +54,7 @@ io.on('connection', function(socket) {
   //Stop sending server data to disconnected clients
   socket.on('disconnect', function(){
 	  sendServerStatus.stop();
-	  console.log('~ Disconnect -> ID: [' + g.colors.cyan('id') + ']');
+	  console.log('~ Disconnect -> ID: [' + g.colors.cyan(id) + ']');
   });
 });
 
