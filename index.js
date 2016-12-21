@@ -19,6 +19,7 @@ var options = {
     cert: fs.readFileSync('./ssl.crt')
 };
 
+//Create SSL encrypted http server to inject WSS into
 const server = https.createServer(options, app);
 const io = require('socket.io')(server);
 
