@@ -98,7 +98,7 @@ io.on('connection', function(socket) {
     sendServerStatus.start();
 
     //Send hereNow and hereMax data every 5 seconds
-    var sendHereDate = cron.job("*/5 * * * * *", function() {
+    var sendHereData = cron.job("*/5 * * * * *", function() {
         if (hereNow != lastHere) {
             lastHere = hereNow;
             socket.emit('hereNow', hereNow);
