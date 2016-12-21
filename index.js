@@ -50,46 +50,63 @@ var servers = [
 
 //Number of connected clients
 var hereNow = 0;
+//Highest number of connected clients
+var hereMax = 0;
 
+//Start message
 console.log('~ [' + g.colors.green('KIWI') + '] WSS server starting...')
 
+//When a client connects, do the following...
 io.on('connection', function(socket) {
-    //Set random connection id for this connection
-    var id = require('./helpers/randomstring')(4);
+	//Update number of connected clients
+	hereNow++;
 
-    //Add 1 to number of connected clients
-    hereNow++;
+    //Update hereMax if necessary
+    if(hereNow > hereMax) {
+        hereMax = hereNow;
+    }
 
-    //Previously sent hereNow message number
-    var lastHere = 0;
+	//Set random connection id for this connection
+	var id = require('./helpers/randomstring')(4);
+	//Previously sent hereNow message number
+	var lastHere = hereNow;
+    //Previously sent hereMax message number
+    var lastHereMax = hereMax;
 
-    console.log('~    Connect -> ID: [' + g.colors.cyan(id) + '] -> Total: [' + g.colors.yellow(hereNow) + ']');
+	console.log('~    Connect -> ID: [' + g.colors.cyan(id) + '] -> Total: [' + g.colors.yellow(hereNow) + ']');
 
-    //Send connection id to client
-    socket.emit('message', id);
+	//Send connection id to client
+	socket.emit('message', id);
+	//Send hereNow to client
+	socket.emit('hereNow', hereNow);
+    //Send hereNow to client
+	socket.emit('hereMax', hereMax);
+	//Send initial server data
+	socket.emit('serverStatus', JSON.stringify(servers));
 
-    //Send initial server data
-    socket.emit('serverStatus', JSON.stringify(servers));
+	//Send server data every 15 seconds
+	var sendServerStatus = cron.job("*/15 * * * * *", function() {
+		socket.emit('serverStatus', JSON.stringify(servers));
+	});
+	sendServerStatus.start();
 
-    //Send server and client data every 15 seconds
-    var sendServerStatus = cron.job("*/15 * * * * *", function() {
-        console.log('HN: ' + hereNow + ' / LH: ' + lastHere);
+    //Send hereNow and hereMax data every 5 seconds
+	var sendHereDate = cron.job("*/5 * * * * *", function() {
+		if(hereNow != lastHere) {
+			lastHere = hereNow;
+			socket.emit('hereNow', hereNow);
+		}
+        if(hereMax != lastHereMax) {
+			lastHereMax = hereMax;
+			socket.emit('hereMax', hereMax);
+		}
+	});
+	sendHereData.start();
 
-        if(hereNow != lastHere) {
-            lastHere = hereNow;
-            socket.emit('hereNow', hereNow);
-            console.log('different here, sending')
-        } else {
-            console.log('same here number');
-        }
-
-        socket.emit('serverStatus', JSON.stringify(servers));
-    });
-    sendServerStatus.start();
-
-    //Stop sending server data to disconnected clients and subtract one from connected clients
+    //Stop sending server and hereNow data to disconnected clients and subtract one from connected clients
     socket.on('disconnect', function() {
         sendServerStatus.stop();
+		sendHereData.stop();
         hereNow--;
         console.log('~ Disconnect -> ID: [' + g.colors.cyan(id) + '] -> Total: [' + g.colors.yellow(hereNow) + ']');
     });
