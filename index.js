@@ -48,13 +48,22 @@ var servers = [
     }
 ];
 
+//Number of connected clients
+var hereNow = 0;
+
 console.log('~ [' + g.colors.green('KIWI') + '] WSS server starting...')
 
 io.on('connection', function(socket) {
     //Set random connection id for this connection
     var id = require('./helpers/randomstring')(4);
 
-    console.log('~    Connect -> ID: [' + g.colors.cyan(id) + ']');
+    //Add 1 to number of connected clients
+    hereNow++;
+
+    //Previously sent hereNow message number
+    var lastHere = 0;
+
+    console.log('~    Connect -> ID: [' + g.colors.cyan(id) + '] -> Total: [' + g.colors.yellow(hereNow) + ']');
 
     //Send connection id to client
     socket.emit('message', id);
@@ -62,16 +71,27 @@ io.on('connection', function(socket) {
     //Send initial server data
     socket.emit('serverStatus', JSON.stringify(servers));
 
-    //Send server data every 15 seconds
+    //Send server and client data every 15 seconds
     var sendServerStatus = cron.job("*/15 * * * * *", function() {
+        console.log('HN: ' + hereNow + ' / LH: ' + lastHere);
+
+        if(hereNow != lastHere) {
+            lastHere = hereNow;
+            socket.emit('hereNow', hereNow);
+            console.log('different here, sending')
+        } else {
+            console.log('same here number');
+        }
+
         socket.emit('serverStatus', JSON.stringify(servers));
     });
     sendServerStatus.start();
 
-    //Stop sending server data to disconnected clients
+    //Stop sending server data to disconnected clients and subtract one from connected clients
     socket.on('disconnect', function() {
         sendServerStatus.stop();
-        console.log('~ Disconnect -> ID: [' + g.colors.cyan(id) + ']');
+        hereNow--;
+        console.log('~ Disconnect -> ID: [' + g.colors.cyan(id) + '] -> Total: [' + g.colors.yellow(hereNow) + ']');
     });
 });
 
