@@ -56,6 +56,9 @@ var servers = [
 var hereNow = 0;
 //Highest number of connected clients
 var hereMax = 0;
+if (args[0] != "") {
+    hereMax = parseInt(args[0]);
+}
 
 //Start message
 console.log('~ [' + g.colors.green('KIWI') + '] WSS server starting...')
