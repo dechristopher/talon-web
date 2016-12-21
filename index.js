@@ -7,6 +7,9 @@ const cron = require('cron');
 const g = require('gulp-util');
 const rq = require('requestify');
 
+//Get command line args
+var args = process.argv.slice(2);
+
 //Load config file
 var config = JSON.parse(fs.readFileSync('./config.json'));
 
