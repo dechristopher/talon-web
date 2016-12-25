@@ -80,7 +80,7 @@ io.on('connection', function(socket) {
     //Previously sent hereMax message number
     var lastHereMax = hereMax;
 
-    console.log('~    Connect -> ID: [' + g.colors.cyan(id) + '] -> Total: [' + g.colors.yellow(hereNow) + ']');
+    console.log('~    Connect 0-> ID: [' + g.colors.cyan(id) + '] -> Total: [' + g.colors.yellow(hereNow) + ']');
 
     //Send connection id to client
     socket.emit('message', id);
@@ -115,7 +115,7 @@ io.on('connection', function(socket) {
         sendServerStatus.stop();
         sendHereData.stop();
         hereNow--;
-        console.log('~ Disconnect -> ID: [' + g.colors.cyan(id) + '] -> Total: [' + g.colors.yellow(hereNow) + ']');
+        console.log('~ Disconnect x-> ID: [' + g.colors.cyan(id) + '] -> Total: [' + g.colors.yellow(hereNow) + ']');
     });
 });
 
