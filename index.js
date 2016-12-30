@@ -94,6 +94,8 @@ io.on('connection', function(socket) {
     socket.emit('hereMax', hereMax);
     //Send initial server data
     socket.emit('serverStatus', JSON.stringify(servers));
+	//Send past 3 minutes of server data
+	socket.emit('serverHistory', JSON.stringify(serverHistory));
 
     //Send server data every 15 seconds
     var sendServerStatus = cron.job("*/15 * * * * *", function() {
