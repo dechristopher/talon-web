@@ -150,6 +150,19 @@ function setServers(apiResponse) {
     servers[7].online = 1;
     servers[7].players = totalPlayers;
 
+	serverHistory[0] = serverHistory[1];
+	serverHistory[1] = serverHistory[2];
+	serverHistory[2] = serverHistory[3];
+	serverHistory[3] = serverHistory[4];
+	serverHistory[4] = serverHistory[5];
+	serverHistory[5] = serverHistory[6];
+	serverHistory[6] = serverHistory[7];
+	serverHistory[7] = serverHistory[8];
+	serverHistory[8] = serverHistory[9];
+	serverHistory[9] = serverHistory[10];
+	serverHistory[10] = serverHistory[11];
+	serverHistory[11] = servers[7].players;
+
     //console.log(servers);
 }
 
