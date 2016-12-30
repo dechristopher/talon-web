@@ -52,6 +52,10 @@ var servers = [
     }
 ];
 
+var serverHistory = [
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+];
+
 //Number of connected clients
 var hereNow = 0;
 //Highest number of connected clients
