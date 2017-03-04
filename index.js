@@ -49,6 +49,9 @@ var servers = [
     }, {
         online: 0,
         players: 0
+    }, {
+        online: 0,
+        players: 0
     }
 ];
 
@@ -60,12 +63,12 @@ var serverHistory = [
 var hereNow = 0;
 //Highest number of connected clients
 var hereMax = 0;
-if (args[0] != "") {
+if (args[0] !== "") {
     hereMax = parseInt(args[0]);
 }
 
 //Start message
-console.log('~ [' + g.colors.green('KIWI') + '] WSS server starting...')
+console.log('~ [' + g.colors.green('KIWI') + '] WSS server starting...');
 
 //When a client connects, do the following...
 io.on('connection', function(socket) {
@@ -143,14 +146,14 @@ function setServers(apiResponse) {
 
     var srvArray = allServers.toString().split("~");
 
-    for (var i = 0; i < 7; i++) {
+    for (var i = 0; i < 8; i++) {
         var thisSrv = srvArray[i].toString().split("-");
         servers[i].online = thisSrv[0];
         servers[i].players = thisSrv[1];
     }
 
-    servers[7].online = 1;
-    servers[7].players = totalPlayers;
+    servers[8].online = 1;
+    servers[8].players = totalPlayers;
 
 	serverHistory[0] = serverHistory[1];
 	serverHistory[1] = serverHistory[2];
@@ -163,7 +166,7 @@ function setServers(apiResponse) {
 	serverHistory[8] = serverHistory[9];
 	serverHistory[9] = serverHistory[10];
 	serverHistory[10] = serverHistory[11];
-	serverHistory[11] = servers[7].players;
+	serverHistory[11] = servers[8].players;
 
     //console.log(servers);
 }
